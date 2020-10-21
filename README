@@ -1,0 +1,140 @@
+FEATURES:
+
+-AUTH
+  -Login
+    Data Model:
+    {
+      email:    string, validation - email format
+      password: string, min 6 char
+    }
+
+    CALLOUT: 
+    Login: POST baseURL/login
+
+        request body: {
+          email,
+          password,
+        }
+
+        response body: {
+          status: number, enum[200,401]
+          data: {
+            userType: string, enum[admin, worker]
+          }
+          error: any,
+        }
+
+-ADMIN PANEL
+  -Manage resources
+    Data model
+    Coffee model
+    {
+      seeds: number - gram,
+      milk:  number - millilitres,
+    }
+    Cups model
+    {
+      110ml: number - unit,
+      180ml: number - unit,
+      250ml: number - unit,
+      340ml: number - unit,
+    }
+    Extra model
+    {
+      sugar: number - sticks,
+    }
+    Snacks model
+    {
+      cookies: number,
+      bars:    number,     => unit,
+      candies: number,
+    }
+
+    CALLOUT:
+    update Coffee: PUT /admin/coffee
+        request body: {
+          seeds, - optional
+          milk, - optional
+        }
+
+        response Body: {
+          status: number, enum[200, 500]
+        }
+
+
+-WORKER PANEL
+    USE ADMIN PANEL DATA MODEL
+
+    CALLOUT:
+    make espresso: POST /make-espresso
+        request body: {
+          extra: { - options
+            sugar: number, number of sticks
+          }
+        }
+
+        response body: {
+          status: number, enum[200, 500]
+          data: {
+            message: string, status 200 -'Your espresso is on the way', 500 - 'Whoops! Not enough seeds'
+          }
+        }
+
+    make americano: POST /make-americano
+        request body: {
+            size: string, enum[medium, large]
+            extra: { - options
+                milk: number, millilitres
+                sugar: number, number of sticks
+            }
+        }
+
+        response body: {
+          status: number, enum[200, 500]
+          data: {
+            message: string, status 200 -'Your americano is on the way', 500 - 'Whoops! Not enough seeds', 'Whoops! Not enough milk', 'Whoops! We out of cups'
+          }
+        }
+
+    make capuccino: POST /make-capuccino
+        request body: {
+          size: string, enum[medium, large]
+          extra: { - options
+            milk: number, millilitres
+            sugar: number, number of sticks
+          }
+        }
+
+        response body: {
+           status: number, enum[200, 500]
+           data: {
+             message: string, status 200 -'Your capuccino is on the way', 500 - 'Whoops! Not enough seeds', 'Whoops! Not enough milk', 'Whoops! We out of cups'
+           }
+        }
+
+    make tea: POST /make-tea
+        request body: {
+          size: string, enum[medium, large]
+          extra: { - options
+            milk: number, millilitres
+            sugar: number, number of sticks
+          }
+        }
+
+        response body: {
+           status: number, enum[200, 500]
+           data: {
+             message: string, status 200 -'Your tea is on the way', 500 - 'Whoops! Not enough seeds', 'Whoops! Not enough milk', 'Whoops! We out of cups'
+           }
+        }
+
+CONSTANTS
+  seedPortion           = 8,   grams
+  milkPortionExtraSmall = 50,  millilitres
+  milkPortionSmall      = 100, millilitres
+  milkPortionMedium     = 140, millilitres
+  milkPortionLarge      = 190, millilitres
+  teaPortionSmall       = 2,   grams
+  teaPortionMedium      = 4,   grams
+  teaPortionLarge       = 5,   grams
+
